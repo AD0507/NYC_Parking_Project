@@ -1,0 +1,40 @@
+
+#name of the project
+name: 'nyc_parking_violations'
+version: '1.0.0'
+config-version: 2
+
+#this setting configures which "profile" dbt uses for the project.
+profile: 'nyc_parking_violations'
+
+#configurations to specify where dbt should look for different types of files
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         #directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+
+#configuring model views as per requirements
+models:
+  nyc_parking_violations:
+    bronze:
+      +materialized: view
+    silver:
+      silver_parking_violation_codes:
+        +materialized: ephemeral
+      silver_parking_violations:
+        +materialized: ephemeral
+      silver_violation_tickets:
+        +materialized: view
+      silver_violation_vehicles:
+        +materialized: view
+    gold:
+      +materialized: table
+tests:
+  +store_failures: true
